@@ -39,7 +39,7 @@ public class AuthService {
                 .build();
 
         } else if ("USER".equals(role)){
-            var user = userDao.getUserByName(username);
+            var user = userDao.getUserByUsername(username);
 
             if (user == null) {
                 throw new LoginException("Invalid username or password.");

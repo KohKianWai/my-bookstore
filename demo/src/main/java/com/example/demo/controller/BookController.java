@@ -6,6 +6,7 @@ import com.example.demo.mapper.BookMapper;
 import com.example.demo.service.BookService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,18 @@ public class BookController {
         return ResponseEntity.ofNullable(
             bookMapper.toDto(bookService.getBookById(id))
         );
+    }
+
+    @GetMapping("/{id}/read")
+    public ResponseEntity<Object> readBook(@PathVariable("id") String bookId){
+        var book = bookService.getBookById(bookId);
+        var content = book.getContent();
+        var contentType = book.getContentType();
+
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"book-" + bookId + "\"")
+            .body(content);
     }
 
     @GetMapping("/{id}/cover-image")

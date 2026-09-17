@@ -3,15 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getBookById } from "../services/book.service";
 import { getAllAuthors } from "../services/author.service";
 import { getAllCategories } from "../services/category.service";
+import { useCart } from "../cart/CartProvider";
 
 export default function BookDetails(){
 
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user") || "null");
+    const role = user?.role
     const [book, setBook] = useState(null);
     const [authors, setAuthors] = useState([]);
     const [categories, setCategories] = useState([]);
     const { id } = useParams();
+    const { addToCart } = useCart()
 
     useEffect(()=> {
         async function fetchData() {
@@ -82,7 +85,7 @@ export default function BookDetails(){
                     <p className="text-sm font-medium text-base-content/60 uppercase tracking-wide">
                         Price
                     </p>
-                    <p className="text-3xl font-extrabold text-primary">
+                    <p className="text-3xl font-extrabold text-green-600">
                         ${Number(book.price || 0).toFixed(2)}
                     </p>
                     </div>
@@ -94,11 +97,28 @@ export default function BookDetails(){
                     </p>
                     </div>
 
-                    {user && (<div className="mt-auto pt-4">
-                                <button className="btn btn-primary w-full text-base">
-                                    Buy Book
-                                </button>
-                            </div>
+                    {role === "USER" && (
+                        <div className="mt-auto pt-4 flex gap-5">
+                            <button
+                                onClick={() => {
+                                    addToCart(book)
+                                    navigate("/")
+                                    alert("Book Added to Cart!")
+                                }}
+                                className="btn btn-outline btn-success flex-1 gap-2 text-sm font-medium"
+                            >
+                                Add to Cart
+                            </button>
+                            <button
+                                className="btn btn-primary flex-1 text-sm font-medium "
+                                onClick={() => {
+                                    addToCart(book)
+                                    navigate("/checkout")
+                                }}
+                            >
+                                Buy Book
+                            </button>
+                        </div>
                     )}
 
                 </div>

@@ -9,6 +9,11 @@ import Home from './home/Home';
 import BookDetails from './book/BookDetails';
 import User from './user/User';
 import CheckoutPage from './payment/CheckoutPage';
+import Cart from './cart/Cart';
+import ChequePayment from './cheque/ChequePayment';
+import Contract from './contract/Contract';
+import CashAccountTransaction from './transaction/CashAccountTransaction';
+import Shelf from './shelf/Shelf';
 
 function App() {
 
@@ -47,14 +52,28 @@ function App() {
                   <li className="font-semibold">
                     <NavLink to="/category">Category</NavLink>
                   </li>
+                  <li className="font-semibold">
+                    <NavLink to="/cheque-payment">Cheque</NavLink>
+                  </li>
                 </>
               )}
               {role === "USER" && (
                 <>
-                </>
-              )}
-              {!role && (
-                <>
+                  <li className="font-semibold">
+                    <NavLink to="/shelf">Shelf</NavLink>
+                  </li>
+                  <li className="font-semibold">
+                    <NavLink to="/cart">Cart</NavLink>
+                  </li>
+                  <li className="font-semibold">
+                    <NavLink to="/cheque-payment">Cheque</NavLink>
+                  </li>
+                  <li className="font-semibold">
+                    <NavLink to="/contract">Contract</NavLink>
+                  </li>
+                  <li className="font-semibold">
+                    <NavLink to="/transaction">Transaction</NavLink>
+                  </li>
                 </>
               )}
             </ul>
@@ -63,7 +82,7 @@ function App() {
           {role ? (
             <div className="flex-none flex items-center gap-3 mx-2">
               <span className="text-sm font-medium opacity-80">
-                {user?.username} ({role})
+                {user?.username}
               </span>
               <button
                 type="button"
@@ -87,7 +106,7 @@ function App() {
         {/* TODO */}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/check" element={<CheckoutPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/login" element={<Login />} />
           <Route 
             path="/user" 
@@ -118,6 +137,41 @@ function App() {
             element={
               <ProtectedRoute role="MODERATOR">
                 <Category />
+              </ProtectedRoute>} 
+            />
+          <Route 
+            path="/cart" 
+            element={
+              <ProtectedRoute role="USER">
+                <Cart />
+              </ProtectedRoute>} 
+            />
+          <Route 
+            path="/cheque-payment" 
+            element={
+              <ProtectedRoute role={["USER", "MODERATOR"]}>
+                <ChequePayment />
+              </ProtectedRoute>} 
+            />
+          <Route 
+            path="/contract" 
+            element={
+              <ProtectedRoute role="USER">
+                <Contract />
+              </ProtectedRoute>} 
+            />
+          <Route 
+            path="/transaction" 
+            element={
+              <ProtectedRoute role="USER">
+                <CashAccountTransaction />
+              </ProtectedRoute>} 
+            />
+          <Route 
+            path="/shelf" 
+            element={
+              <ProtectedRoute role="USER">
+                <Shelf />
               </ProtectedRoute>} 
             />
           <Route path="/books/:id" element={<BookDetails />} />

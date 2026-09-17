@@ -21,6 +21,10 @@ public class UserService {
         return userDao.findAll();
     }
 
+    public UserBean getUserByUsername(String username){
+        return userDao.getUserByUsername(username);
+    }
+
     @Transactional
     public void createUser(UserBean userBean){
         userBean.setCreatedDate(LocalDateTime.now());

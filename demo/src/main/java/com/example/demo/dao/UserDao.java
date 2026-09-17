@@ -11,7 +11,7 @@ public class UserDao extends GenericDao<UserBean, String>{
         super(UserBean.class);
     }
 
-    public UserBean getUserByName(String username){
+    public UserBean getUserByUsername(String username){
         List<UserBean> users = entityManager
             .createQuery(
                 "SELECT u FROM UserBean u WHERE u.username = :username",

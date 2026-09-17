@@ -51,6 +51,10 @@ export default function Category(){
 
     const [form, setForm] = useState(categoryDto)
 
+    const [searchValue, setSearchValue] = useState("");
+
+    const filteredCategories = categories.filter(category => category.name.toLowerCase().includes(searchValue.toLowerCase()))
+
     useEffect(() => {
         async function fetchData() {
             const categories = await getAllCategories()
@@ -104,7 +108,7 @@ export default function Category(){
         <div className="p-6">
             <DataTable
                 columns={categoryColumns}
-                data={categories}
+                data={filteredCategories}
                 onAdd={() => {
                     clearForm()
                     setEditingId(null)
@@ -112,7 +116,10 @@ export default function Category(){
                 }}
                 onDelete={handleDelete}
                 onUpdate={handleUpdate}
-                entity="Categories" 
+                entity="Categories"
+                searchValue={searchValue}
+                onSearch={setSearchValue}
+                searchPlaceholder="Search category name..."
             />
             <FormModal 
                     isOpen={isModalOpen} 

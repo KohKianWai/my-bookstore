@@ -65,6 +65,10 @@ export default function Author(){
 
     const [form, setForm] = useState(authorDto)
 
+    const [searchValue, setSearchValue] = useState("");
+
+    const filteredAuthor = authors.filter(author => author.name.toLowerCase().includes(searchValue.toLowerCase()));
+
     useEffect(() => {
         async function fetchData() {
             const author = await getAllAuthors()
@@ -118,7 +122,7 @@ export default function Author(){
         <div className="p-6">
             <DataTable
                 columns={authorColumns}
-                data={authors}
+                data={filteredAuthor}
                 onAdd={() => {
                     clearForm()
                     setEditingId(null)
@@ -127,6 +131,9 @@ export default function Author(){
                 onDelete={handleDelete}
                 onUpdate={handleUpdate}
                 entity="Authors" 
+                searchValue={searchValue}
+                onSearch={setSearchValue}
+                searchPlaceholder="Search author name..."
             />
             <FormModal 
                     isOpen={isModalOpen} 

@@ -7,33 +7,30 @@ export const getAllBooks = () => axios.get(API_URL);
 
 export const getBookById = (id) => axios.get(`${API_URL}/${id}`);
 
-export const createBook = (bookDto) =>
-    axios.post(API_URL, bookDto);
+export const createBook = (bookDto) => axios.post(API_URL, bookDto);
 
 export const uploadBookContent = (id, file) => {
-    const formData = new FormData();
+	const formData = new FormData();
 
-    formData.append("file", file);
+	formData.append("file", file);
 
-    return axios.post(
-        `${API_URL}/${id}/content`,
-        formData
-    );
+	return axios.post(`${API_URL}/${id}/content`, formData);
 };
 
 export const uploadBookCoverImage = (id, file) => {
-    const formData = new FormData()
+	const formData = new FormData();
 
-    formData.append("cover-image", file)
+	formData.append("cover-image", file);
 
-    return axios.post(
-        `${API_URL}/${id}/cover-image`,
-        formData
-    )
-}
+	return axios.post(`${API_URL}/${id}/cover-image`, formData);
+};
 
 export const updateBook = (id, bookDto) =>
-    axios.put(`${API_URL}/${id}`, bookDto);
+	axios.put(`${API_URL}/${id}`, bookDto);
 
-export const deleteBook = (id) =>
-    axios.delete(`${API_URL}/${id}`);
+export const deleteBook = (id) => axios.delete(`${API_URL}/${id}`);
+
+export const readBook = (bookId) =>
+	axios.get(`${API_URL}/${bookId}/read`, {
+		responseType: "blob"
+	});

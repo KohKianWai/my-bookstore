@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 
-export default function ProtectedRoute({children, role}) {
+export default function ProtectedRoute({children, allowedRoles = []}) {
 
     const user = JSON.parse(
         localStorage.getItem("user")
@@ -10,7 +10,9 @@ export default function ProtectedRoute({children, role}) {
         return <Navigate to="/" />;
     }
 
-    if (role && user.role !== role) {
+    const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+
+    if (roles.length > 0 && !roles.includes(user.role)) {
         return <Navigate to="/" />;
     }
 

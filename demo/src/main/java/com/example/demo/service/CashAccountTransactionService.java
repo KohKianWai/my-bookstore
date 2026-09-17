@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.CashAccountTransactionDao;
+import com.example.demo.dao.UserDao;
 import com.example.demo.dto.CashAccountTransactionDto;
 import com.example.demo.entity.CashAccountTransactionBean;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CashAccountTransactionService {
 
     private final CashAccountTransactionDao cashAccountTransactionDao;
+    private final UserDao userDao;
+
+    public List<CashAccountTransactionBean> getTransactionByUsername(String username){
+        var user = userDao.getUserByUsername(username);
+        return cashAccountTransactionDao.getTransactionByUserId(user.getId());
+
+    }
 
     @Transactional
     public void createCashAccountTransaction(CashAccountTransactionBean cashAccountTransactionBean) {

@@ -3,6 +3,7 @@ import { getAllUsers, updateUser } from "../services/user.service";
 import DataTable from "../share/DataTable";
 import GenericForm from "../share/GenericForm";
 import FormModal from "../share/FormModal";
+import { createTransaction } from "../services/cash.account.transaction.service";
 
 export default function User(){
 
@@ -11,6 +12,9 @@ export default function User(){
     const [selectedUser, setSelectedUser] = useState(null);
     const [modalType, setModalType] = useState(null);
     const [form, setForm] = useState({});
+    const [searchValue, setSearchValue] = useState("");
+
+    const filteredUser = users.filter(user => user.username.toLowerCase().includes(searchValue.toLowerCase()));
 
     const passwordFields = [
         {
@@ -181,22 +185,33 @@ export default function User(){
         const user = users.find(
             user => user.id === selectedUser.id
         );
+        const dateNow = new Date()
 
         if (modalType === "RESET_PASSWORD") {
 
             await updateUser(selectedUser.id, {
                 ...user,
                 password: form.password,
-                updatedDate: new Date()
+                updatedDate: dateNow
             });
 
         } else if (modalType === "TOP_UP") {
 
             await updateUser(selectedUser.id, {
                 ...user,
-                amount: form.amount,
-                updatedDate: new Date()
+                amount: user.amount + Number(form.amount),
+                updatedDate: dateNow
             });
+
+            const transactionDto = {
+                userId: user.id,
+                transactionType: "CASH_DEPOSIT",
+                transactionFlow: "IN",
+                amount: Number(form.amount),
+                createdDate: dateNow,
+            };
+
+            await createTransaction(transactionDto)
         }
 
         const response = await getAllUsers();
@@ -207,16 +222,20 @@ export default function User(){
         setSelectedUser(null);
         setModalType(null);
         setIsModalOpen(false);
+        alert("Top Up Completed!")
     };
 
     return (
         <div className="p-6">
             <DataTable
                 columns={userColumns}
-                data={users}
+                data={filteredUser}
                 onDelete={() => {}}
                 onUpdate={() => {}}
-                entity="Users" 
+                entity="Users"
+                searchValue={searchValue}
+                onSearch={setSearchValue}
+                searchPlaceholder="Search username..."
             />
             <FormModal
                 isOpen={isModalOpen}

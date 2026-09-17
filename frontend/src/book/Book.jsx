@@ -11,6 +11,7 @@ export default function Book(){
     const [authors, setAuthors] = useState([]);
     const [categories, setCategories] = useState([]);
     const [editingId, setEditingId] = useState(null);
+    const [searchValue, setSearchValue] = useState("");
 
     const bookFields = [
         {
@@ -143,6 +144,8 @@ export default function Book(){
 
     const [form, setForm] = useState(bookDto)
 
+    const filteredBooks = books.filter(book => book.name.toLowerCase().includes(searchValue.toLowerCase()));
+
     useEffect(() => {
        async function fetchData() {
             try {
@@ -255,7 +258,7 @@ export default function Book(){
         <div className="p-6">
             <DataTable
                 columns={bookColumns}
-                data={books}
+                data={filteredBooks}
                 onAdd={() => {
                     clearForm()
                     setEditingId(null)
@@ -263,7 +266,10 @@ export default function Book(){
                 }}
                 onDelete={handleDelete}
                 onUpdate={handleUpdate}
-                entity="Books" 
+                entity="Books"
+                searchValue={searchValue}
+                onSearch={setSearchValue}
+                searchPlaceholder="Search book name..."
             />
             <FormModal 
                     isOpen={isModalOpen} 
